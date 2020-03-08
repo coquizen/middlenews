@@ -5,6 +5,7 @@ const googleFavIconAPI = "https://www.google.com/s2/favicons?domain="
 
 export default function SourcesSelection(props) {
     const [sources, setSources] = useState([]);
+    const [selectedSources, setSelectedSources] = useState([]);
     
     useEffect(() => {
             async function getData() {
@@ -32,15 +33,28 @@ export default function SourcesSelection(props) {
         setSources(selectedSources)
     }
 
+    const submitSelection = () => {
+        var tmpSelectedSources = sources.filter((source) => {
+            return source.isSelected === true
+        })
+        setSelectedSources(tmpSelectedSources)
+    }
+
     return (
         <div>
+        <li>
             {sources && sources.map(dat => (
-                <div key={dat.idx}>
+                <ul key={dat.idx}>
                     <p>{dat.source}</p>
-                    <p >Selected: {dat.isSelected.toString()}</p>
+                    <p>Selected: {dat.isSelected.toString()}</p>
                     <button onClick={() => toggleSelected(dat.idx)}>Select</button>
-                </div>))
+                </ul>))
             }
+        </li>
+        <button onClick={() => submitSelection()}>Submit</button>
+        {selectedSources && selectedSources.map((selectSource) => (
+            <div>{selectSource.source}</div>
+        ))}
         </div>
     )
 }
