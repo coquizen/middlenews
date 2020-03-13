@@ -3,10 +3,9 @@ import Papa from 'papaparse';
 
 const googleFavIconAPI = "https://www.google.com/s2/favicons?domain="
 
-export default function SourcesSelection(props) {
-    const [sources, setSources] = useState([]);
-    const [selectedSources, setSelectedSources] = useState([]);
-    
+export default function SourcesSelection({ selectedSources, setSelectedSources }) {
+    const [sources, setSources] = useState([])
+
     useEffect(() => {
             async function getData() {
                 const file = require('./source-list.csv')
@@ -17,15 +16,28 @@ export default function SourcesSelection(props) {
                 const csv = decoder.decode(result.value)
                 const results = Papa.parse(csv, { header: true })
                 const data = results.data
-                data.map((dat, idx) => {
+                data.forEach((dat, idx) => {
                     dat.idx = idx
                     dat.faviconUL = googleFavIconAPI + dat.domain
                     dat.isSelected = false
+                    dat.rssURL = getRSSURL(dat.domain)
                 })
                 setSources(results.data)
             }
            getData()
-    }, [])         
+    }, [])
+    
+    const getRSSURL = async (sourceDomain) => {
+                const html = await fetch(sourceDomain, {
+                    headers: {
+                        'content-type': 'text/html'
+                    },
+                    mode: 'no-cors'
+                })
+        const doc = await new DOMParser().parseFromString(html, 'text/html')
+                console.log(doc)
+    }
+
 
     const toggleSelected = (idx) => {
         var selectedSources = Array.from(sources)
@@ -53,8 +65,9 @@ export default function SourcesSelection(props) {
         </li>
         <button onClick={() => submitSelection()}>Submit</button>
         {selectedSources && selectedSources.map((selectSource) => (
-            <div>{selectSource.source}</div>
+            <div key={selectSource.idx}>{selectSource.source}</div>
         ))}
+
         </div>
     )
 }
