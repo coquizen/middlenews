@@ -13,16 +13,41 @@ export default function Articles ({ searchTerms, selectedSources }) {
                                  //y - previous year
                                  //m# - where # is number of months
     const parseSearchTerms = (terms) => {
-        var termsArr = terms.split(/.*["| ].*/) 
-        let quotedRegex = /""
-        let quotedTerms = searchTerms.match(quotedRegex)
+        var termsArr = terms.split('/".+"/')
+        var exactTerm = []
+        var looseTerm = []
 
+        termsArr.map((term) => {
+            if (term[0].equals("\"")) {
+                exactTerm.push(term)
+            } else {
+                looseTerm.push(term)
+            }
+        })
+        const query = asQuoted + exactTerm.join(`+`) + `&` + asOrQuoted + looseTerm.join(`+`)
+        return query
     }
+
     useEffect(() => {
         selectedSources.map((source) => {
             const query = parseSearchTerms(searchTerms)
             const baseURL = googleSearchAPI + siteSearch + source.domain
+
+            var reqURL = baseURL + `&` + query 
+
+            
             
         })
     }, [])
+
+    const queryArticle = async (url) => {
+        const html = await fetch(url, {
+            headers: {
+                'content-type': 'text/html'
+            },
+            mode: 'no-cors'
+        })
+        
+
+    }
 }
