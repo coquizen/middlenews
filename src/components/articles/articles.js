@@ -13,12 +13,12 @@ export default function Articles ({ searchTerms, selectedSources }) {
                                  //y - previous year
                                  //m# - where # is number of months
     const parseSearchTerms = (terms) => {
-        var termsArr = terms.split('/".+"/')
+        var termsArr = terms.split(" ")
         var exactTerm = []
         var looseTerm = []
 
         termsArr.map((term) => {
-            if (term[0].equals("\"")) {
+            if (term[0] === "\"") {
                 exactTerm.push(term)
             } else {
                 looseTerm.push(term)
@@ -29,16 +29,12 @@ export default function Articles ({ searchTerms, selectedSources }) {
     }
 
     useEffect(() => {
-        selectedSources.map((source) => {
-            const query = parseSearchTerms(searchTerms)
+        (selectedSources && searchTerms) && selectedSources.map((source) => {
+            const terms = parseSearchTerms(searchTerms)
             const baseURL = googleSearchAPI + siteSearch + source.domain
-
-            var reqURL = baseURL + `&` + query 
-
-            
-            
+            queryArticle()
         })
-    }, [])
+    }, [searchTerms, selectedSources])
 
     const queryArticle = async (url) => {
         const html = await fetch(url, {
@@ -47,7 +43,11 @@ export default function Articles ({ searchTerms, selectedSources }) {
             },
             mode: 'no-cors'
         })
-        
-
     }
+
+    return(
+        <div>
+            <h1>True</h1>
+        </div>
+    )
 }

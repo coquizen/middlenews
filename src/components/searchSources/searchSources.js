@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-export default function SearchSources ({searchArticles}) {
+export default function SearchSources ({ setSearchTerms }) {
     const [input, setInput] = useState()
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        searchArticles(input)
+        setSearchTerms(input)
         setInput('')
     }
     return (

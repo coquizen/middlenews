@@ -1,1 +1,1 @@
-export { default as Article } from './articles.js';
+export { default as Articles } from './articles.js';
